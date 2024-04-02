@@ -63,11 +63,7 @@ export const PersonInfoExtension = {
       const email = formContainer.querySelector('.email')
       const phone = formContainer.querySelector('.phone')
 
-      if (
-        !name.checkValidity() ||
-        !email.checkValidity() ||
-        !phone.checkValidity()
-      ) {
+      if (!name.checkValidity() || !email.checkValidity() || !phone.checkValidity()) {
         name.classList.add('invalid')
         email.classList.add('invalid')
         phone.classList.add('invalid')
@@ -100,7 +96,7 @@ export const MachineInfoExtension = {
               font-size: 0.8em;
               color: #888;
             }
-            input[type="text"], input[type="email"], input[type="tel"] {
+            input[type="text"], input[type="model"], input[type="brand"] {
               width: 100%;
               border: none;
               border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
@@ -140,10 +136,7 @@ export const MachineInfoExtension = {
       const model = formContainer.querySelector('.model')
       const brand = formContainer.querySelector('.brand')
 
-      if (
-        !model.checkValidity() ||
-        !brand.checkValidity()
-      ) {
+      if (!model.checkValidity() || !brand.checkValidity()) {
         model.classList.add('invalid')
         brand.classList.add('invalid')
         return
