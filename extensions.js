@@ -198,25 +198,61 @@ export const MainReasonFormExtension = {
 
 
       <div class="reasons-container">
-        <label for="reasons">Reasons for Delivery</label><br>
-        <div class="reason">
-          <input type="checkbox" class="reasons" name="reasons" value="Behov for service">Behov for service</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Ønsker fuld afkalkning">Ønsker fuld afkalkning</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Fejlkoder på displayet">Fejlkoder på displayet</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Opvarmer ikke længere">Opvarmer ikke længere</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Vandet er for varmt">Vandet er for varmt</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Vandet er for koldt">Vandet er for koldt</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Ingen pumpe tryk">Ingen pumpe tryk</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Lidt eller intet vand kommer ud">Lidt eller intet vand kommer ud</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Ujævn/Faldende tryk
-">Ujævn/Faldende tryk
-</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Lækker vand">Lækker vand</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Ingen strøm - vil ikke tænde">Ingen strøm - vil ikke tænde</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Udstyret er støjende">Udstyret er støjende</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Vil ikke male">Vil ikke male</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Lækker fra inden i maskinen">Lækker fra inden i maskinen</input><br>
-          <input type="checkbox" class="reasons" name="reasons" value="Ingen damp">Ingen damp</input><br>
+        <div class="reason-group">
+          <label>Service og vedligeholdelse</label>
+          <div class="reason">
+            <input type="checkbox" class="reasons" name="reasons" value="Behøv for services">Behøv for services</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Ønsker fuld afkalkning">Ønsker fuld afkalkning</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Fejlkoder på display">Fejlkoder på display</input><br>
+          </div>
+        </div>
+        
+        <div class="reason-group">
+          <label>Temperaturproblemer</label>
+          <div class="reason">
+            <input type="checkbox" class="reasons" name="reasons" value="Opvarmer ikke længere">Opvarmer ikke længere</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Vandet er for koldt">Vandet er for koldt</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Vandet er for varmt">Vandet er for varmt</input><br>
+          </div>
+        </div>
+
+        <div class="reason-group">
+          <label>Vand problemer</label>
+          <div class="reason">
+            <input type="checkbox" class="reasons" name="reasons" value="Intet/lidt vand kommer ud">Intet/lidt vand kommer ud</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Lækker vand">Lækker vand</input><br>
+          </div>
+        </div>
+
+        <div class="reason-group">
+          <label>Trykproblemer</label>
+          <div class="reason">
+            <input type="checkbox" class="reasons" name="reasons" value="Intet pumpetryk">Intet pumpetryk</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Ujævnt/faldende tryk">Ujævnt/faldende tryk</input><br>
+          </div>
+        </div>
+
+        <div class="reason-group">
+          <label>Elektriske og mekaniske problemer</label>
+          <div class="reason">
+            <input type="checkbox" class="reasons" name="reasons" value="Ingen strøm - tænder ikke">Ingen strøm - tænder ikke</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Udstryr larmer">Udstryr larmer</input><br>
+            <input type="checkbox" class="reasons" name="reasons" value="Vil ikke kværne">Vil ikke kværne</input><br>
+          </div>
+        </div>
+
+        <div class="reason-group">
+          <label>Dampfunktionalitet</label>
+          <div class="reason">
+            <input type="checkbox" class="reasons" name="reasons" value="Ingen damp">Ingen damp</input><br>
+          </div>
+        </div>
+
+        <div class="reason-group">
+          <label>Andre problemer</label>
+          <div class="reason">
+            <input type="checkbox" class="reasons" name="reasons" value="Siver ind fra maskine">Siver ind fra maskine</input><br>
+          </div>
         </div>
       </div><br>
 
@@ -384,32 +420,6 @@ export const VideoExtension = {
   },
 }
 
-export const TimerExtension = {
-  name: 'Timer',
-  type: 'response',
-  match: ({ trace }) =>
-    trace.type === 'ext_timer' || trace.payload.name === 'ext_timer',
-  render: ({ trace, element }) => {
-    const { duration } = trace.payload || 5
-    let timeLeft = duration
-
-    const timerContainer = document.createElement('div')
-    timerContainer.innerHTML = `<p>Time left: <span id="time">${timeLeft}</span></p>`
-
-    const countdown = setInterval(() => {
-      if (timeLeft <= 0) {
-        clearInterval(countdown)
-        window.voiceflow.chat.interact({ type: 'complete' })
-      } else {
-        timeLeft -= 1
-        timerContainer.querySelector('#time').textContent = timeLeft
-      }
-    }, 1000)
-
-    element.appendChild(timerContainer)
-  },
-}
-
 export const FileUploadExtension = {
   name: 'FileUpload',
   type: 'response',
@@ -564,6 +574,32 @@ export const KBUploadExtension = {
       })
       element.appendChild(kbfileUploadContainer)
     }
+  },
+}
+
+export const TimerExtension = {
+  name: 'Timer',
+  type: 'response',
+  match: ({ trace }) =>
+    trace.type === 'ext_timer' || trace.payload.name === 'ext_timer',
+  render: ({ trace, element }) => {
+    const { duration } = trace.payload || 5
+    let timeLeft = duration
+
+    const timerContainer = document.createElement('div')
+    timerContainer.innerHTML = `<p>Time left: <span id="time">${timeLeft}</span></p>`
+
+    const countdown = setInterval(() => {
+      if (timeLeft <= 0) {
+        clearInterval(countdown)
+        window.voiceflow.chat.interact({ type: 'complete' })
+      } else {
+        timeLeft -= 1
+        timerContainer.querySelector('#time').textContent = timeLeft
+      }
+    }, 1000)
+
+    element.appendChild(timerContainer)
   },
 }
 
