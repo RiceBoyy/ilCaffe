@@ -154,114 +154,103 @@ export const MachineInfoExtension = {
   },
 }
 
-export const DeliveryPaymentFormExtension = {
-  name: 'DeliveryPaymentForms',
+export const MainReasonFormExtension = {
+  name: 'MainReasonForms',
   type: 'response',
   match: ({ trace }) =>
-    trace.type === 'delivery_payment_ext_form' || trace.payload.name === 'delivery_payment_ext_form',
+    trace.type === 'main_reason_ext_form' || trace.payload.name === 'main_reason_ext_form',
   render: ({ trace, element }) => {
-    const formContainer = document.createElement('form')
+    const formContainer = document.createElement('form');
 
     formContainer.innerHTML = `
-          <style>
-            label {
-              font-size: 0.8em;
-              color: #888;
-            }
-            .invalid {
-              border-color: red;
-            }
-            .submit {
-              background: linear-gradient(to right, #2e6ee1, #2e7ff1 );
-              border: none;
-              color: white;
-              padding: 10px;
-              border-radius: 5px;
-              width: 100%;
-              cursor: pointer;
-            }
-            .reasons-container, .amount-container {
-              margin-top: 10px;
-            }
-          </style>
+      <style>
+        .reason {
+          width: 197px;
+        }
 
-          <div class="reasons-container">
-            <label for="reasons">Reasons for Delivery</label><br>
-            <div>
-              <label><input type="radio" class="reasons" name="reasons" value="Option 1"> Option 1</label><br>
-              <label><input type="radio" class="reasons" name="reasons" value="Option 2"> Option 2</label><br>
-              <label><input type="radio" class="reasons" name="reasons" value="Option 3"> Option 3</label><br>
-            </div>
-          </div><br>
+        label {
+          font-size: 0.8em;
+          color: #888;
+        }
+        
+        .invalid {
+          border-color: red;
+        }
 
-          <div class="amount-container">
-            <label for="amount">Amount of Money</label><br>
-            <select class="amount" name="amount" required>
-              <option value="1200">$1200</option>
-              <option value="2000">$2000</option>
-              <option value="3000">$3000</option>
-              <option value="4000">$4000</option>
-              <option value="5000">$5000</option>
-              <option value="other">Other</option>
-            </select>
-            <input type="number" class="other-amount" name="other-amount" placeholder="Enter amount (min $1200)" style="display: none;">
-          </div><br>
+        .submit {
+          background: linear-gradient(to right, #2e6ee1, #2e7ff1 );
+          border: none;
+          color: white;
+          padding: 10px;
+          border-radius: 5px;
+          width: 100%;
+          cursor: pointer;
+        }
 
-          <input type="submit" class="submit" value="Submit">
-        `
+        .reasons-container {
+          margin-top: 10px;
+        }
+        input[type="checkbox"] {
+          transform: scale(1.5);
+          margin-right: 10px;
+        }
+      </style>
 
-    const amountSelect = formContainer.querySelector('.amount');
-    const otherAmountInput = formContainer.querySelector('.other-amount');
 
-    amountSelect.addEventListener('change', function () {
-      if (amountSelect.value === 'other') {
-        otherAmountInput.style.display = 'inline';
-        otherAmountInput.setAttribute('min', '1200');
-        otherAmountInput.setAttribute('required', 'required');
-      } else {
-        otherAmountInput.style.display = 'none';
-        otherAmountInput.removeAttribute('min');
-        otherAmountInput.removeAttribute('required');
-      }
-    });
+      <div class="reasons-container">
+        <label for="reasons">Reasons for Delivery</label><br>
+        <div class="reason">
+          <input type="checkbox" class="reasons" name="reasons" value="Behov for service">Behov for service</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Ønsker fuld afkalkning">Ønsker fuld afkalkning</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Fejlkoder på displayet">Fejlkoder på displayet</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Opvarmer ikke længere">Opvarmer ikke længere</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Vandet er for varmt">Vandet er for varmt</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Vandet er for koldt">Vandet er for koldt</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Ingen pumpe tryk">Ingen pumpe tryk</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Lidt eller intet vand kommer ud">Lidt eller intet vand kommer ud</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Ujævn/Faldende tryk
+">Ujævn/Faldende tryk
+</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Lækker vand">Lækker vand</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Ingen strøm - vil ikke tænde">Ingen strøm - vil ikke tænde</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Udstyret er støjende">Udstyret er støjende</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Vil ikke male">Vil ikke male</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Lækker fra inden i maskinen">Lækker fra inden i maskinen</input><br>
+          <input type="checkbox" class="reasons" name="reasons" value="Ingen damp">Ingen damp</input><br>
+        </div>
+      </div><br>
+
+      <input type="submit" class="submit" value="Submit">
+    `;
 
     formContainer.addEventListener('submit', function (event) {
-      event.preventDefault()
+      event.preventDefault();
 
-      const reasons = formContainer.querySelector('.reasons:checked')
-      const amount = formContainer.querySelector('.amount')
-      const otherAmount = formContainer.querySelector('.other-amount')
+      const selectedReasons = [];
+      const checkboxes = formContainer.querySelectorAll('.reasons:checked');
 
-      if (!reasons || !amount.checkValidity() || (otherAmount.style.display === 'inline' && !otherAmount.checkValidity())) {
-        if (!reasons) {
-          formContainer.querySelector('.reasons-container').classList.add('invalid');
-        } else {
-          formContainer.querySelector('.reasons-container').classList.remove('invalid');
-        }
-        amount.classList.add('invalid')
-        if (otherAmount.style.display === 'inline') {
-          otherAmount.classList.add('invalid');
-        }
-        return
+      checkboxes.forEach(checkbox => {
+        selectedReasons.push(checkbox.value);
+      });
+
+      if (selectedReasons.length === 0) {
+        formContainer.querySelector('.reasons-container').classList.add('invalid');
+        return;
       }
 
-      formContainer.querySelector('.submit').remove()
-
-      const selectedReasons = reasons.value;
-      const selectedAmount = amount.value === 'other' ? otherAmount.value : amount.value;
+      formContainer.querySelector('.submit').remove();
 
       window.voiceflow.chat.interact({
         type: 'complete',
         payload: {
-          reasons: selectedReasons,
-          amount: selectedAmount
+          reasons: selectedReasons
         },
-      })
-    })
+      });
+    });
 
-    element.appendChild(formContainer)
+    element.appendChild(formContainer);
   },
-}
+};
 
 
 
