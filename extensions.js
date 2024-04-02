@@ -187,11 +187,11 @@ export const DeliveryPaymentFormExtension = {
 
           <div class="reasons-container">
             <label for="reasons">Reasons for Delivery</label><br>
-            <select multiple class="reasons" name="reasons" required>
-              <option value="Option 1">Option 1</option>
-              <option value="Option 2">Option 2</option>
-              <option value="Option 3">Option 3</option>
-            </select>
+            <div>
+              <label><input type="radio" class="reasons" name="reasons" value="Option 1"> Option 1</label><br>
+              <label><input type="radio" class="reasons" name="reasons" value="Option 2"> Option 2</label><br>
+              <label><input type="radio" class="reasons" name="reasons" value="Option 3"> Option 3</label><br>
+            </div>
           </div><br>
 
           <div class="amount-container">
@@ -228,12 +228,16 @@ export const DeliveryPaymentFormExtension = {
     formContainer.addEventListener('submit', function (event) {
       event.preventDefault()
 
-      const reasons = formContainer.querySelector('.reasons')
+      const reasons = formContainer.querySelector('.reasons:checked')
       const amount = formContainer.querySelector('.amount')
       const otherAmount = formContainer.querySelector('.other-amount')
 
-      if (!reasons.checkValidity() || !amount.checkValidity() || (otherAmount.style.display === 'inline' && !otherAmount.checkValidity())) {
-        reasons.classList.add('invalid')
+      if (!reasons || !amount.checkValidity() || (otherAmount.style.display === 'inline' && !otherAmount.checkValidity())) {
+        if (!reasons) {
+          formContainer.querySelector('.reasons-container').classList.add('invalid');
+        } else {
+          formContainer.querySelector('.reasons-container').classList.remove('invalid');
+        }
         amount.classList.add('invalid')
         if (otherAmount.style.display === 'inline') {
           otherAmount.classList.add('invalid');
@@ -243,7 +247,7 @@ export const DeliveryPaymentFormExtension = {
 
       formContainer.querySelector('.submit').remove()
 
-      const selectedReasons = Array.from(reasons.selectedOptions).map(option => option.value);
+      const selectedReasons = reasons.value;
       const selectedAmount = amount.value === 'other' ? otherAmount.value : amount.value;
 
       window.voiceflow.chat.interact({
@@ -258,6 +262,7 @@ export const DeliveryPaymentFormExtension = {
     element.appendChild(formContainer)
   },
 }
+
 
 
 
